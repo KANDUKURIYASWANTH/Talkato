@@ -1,0 +1,15 @@
+{
+  "short_name": "Talkato",
+  "name": "Lets talk with the world!",
+  "icons": [
+    {
+      "src": "logo-talkato_adobe_express.svg",
+      "type": "image/svg",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
