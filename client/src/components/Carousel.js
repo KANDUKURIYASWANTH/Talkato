@@ -25,7 +25,7 @@ const Carousel = ({images,id}) => {
                             filter:theme
                             ?'invert(1)'
                             :'invert(0)',
-                            maxHeight:'600px'
+                            maxHeight:'auto'
                         }}/>
                     </div>
                 ))

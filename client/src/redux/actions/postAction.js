@@ -1,12 +1,14 @@
 import { GLOBALTYPES } from "./globalTypes";
 import {imageUpload} from "../../utils/imageUpload"
-import { getDataAPI, postDataAPI, patchDataAPI } from "../../utils/fetchData";
+import { getDataAPI, postDataAPI, patchDataAPI,deleteDataAPI } from "../../utils/fetchData";
 
 export const POST_TYPES={
     CREATE_POST:"CREATE_POST",
     LOADING_POST:"LOADING_POST",
     GET_POSTS:"GET_POSTS",
-    UPDATE_POST: 'UPDATE_POST'
+    UPDATE_POST: 'UPDATE_POST',
+    GET_POST:'GET_POST',
+    DELETE_POST:"DELETE_POST"
 
 }
 
@@ -36,7 +38,7 @@ export const getPosts=(token)=>async (dispatch)=>{
         const res=await getDataAPI('posts',token)
         dispatch({
             type:POST_TYPES.GET_POSTS,
-            payload:res.data
+            payload:{...res.data,page:2}
         })
         dispatch({type:POST_TYPES.LOADING_POST,payload:false})
     } catch (error) {
@@ -52,8 +54,7 @@ export const updatePost=({content,images,auth,status})=>async (dispatch)=>{
     const imgOldUrl=images.filter(img=>img.url)
     if(status.content===content
         && imgNewUrl.length===0
-        && imgOldUrl.length===status.images.length)
-    return;
+        && imgOldUrl.length===status.images.length) {return;}
     try {
         dispatch({type:GLOBALTYPES.ALERT,payload:{loading:true}})
         if(imgNewUrl.length>0) media = await imageUpload(imgNewUrl)
@@ -92,6 +93,60 @@ export const unLikePost=({post,auth})=>async (dispatch)=>{
         dispatch({
             type: GLOBALTYPES.ALERT,
             payload:{error:error.response.data.msg}
+        })
+    }
+}
+
+export const getPost=({detailPost,id,auth})=>async(dispatch)=>{
+    if(detailPost.every(post=>post._id!==id)){
+        try {
+            const res=await getDataAPI(`post/${id}`,auth.token)
+            dispatch({type:POST_TYPES.GET_POST,payload:res.data.post})
+        } catch (error) {
+            dispatch({
+                type: GLOBALTYPES.ALERT,
+                payload:{error:error.response.data.msg}
+            })
+        }
+    }
+}
+
+export const deletePost=({post,auth})=>async (dispatch)=>{
+    dispatch({type:POST_TYPES.DELETE_POST,payload:post})
+    try {
+        deleteDataAPI(`post/${post._id}`,auth.token)
+    } catch (error) {
+        dispatch({
+            type:GLOBALTYPES.ALERT,
+            payload:{error:error.response.data.msg}
+        })
+        
+    }
+}
+
+export const savePost = ({post, auth}) => async (dispatch) => {
+    const newUser = {...auth.user, saved: [...auth.user.saved, post._id]}
+    dispatch({ type: GLOBALTYPES.AUTH, payload: {...auth, user: newUser}})
+    try {
+        await patchDataAPI(`savePost/${post._id}`, null, auth.token)
+    } catch (err) {
+        dispatch({
+            type: GLOBALTYPES.ALERT,
+            payload: {error: err.response.data.msg}
+        })
+    }
+}
+
+export const unSavePost = ({post, auth}) => async (dispatch) => {
+    const newUser = {...auth.user, saved: auth.user.saved.filter(id => id !== post._id) }
+    dispatch({ type: GLOBALTYPES.AUTH, payload: {...auth, user: newUser}})
+
+    try {
+        await patchDataAPI(`unSavePost/${post._id}`, null, auth.token)
+    } catch (err) {
+        dispatch({
+            type: GLOBALTYPES.ALERT,
+            payload: {error: err.response.data.msg}
         })
     }
 }
