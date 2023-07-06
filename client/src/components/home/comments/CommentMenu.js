@@ -2,10 +2,10 @@ import React from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { deleteComment } from '../../../redux/actions/commentAction'
 const CommentMenu = ({post,comment,setOnEdit}) => {
-    const {auth} = useSelector(state=>state)
+    const {auth,socket} = useSelector(state=>state)
     const dispatch = useDispatch()
     const handleRemove=()=>{
-        if(post.user._id===auth.user._id || comment.user._id === auth.user._id) dispatch(deleteComment({post,auth,comment}))
+        if(post.user._id===auth.user._id || comment.user._id === auth.user._id) dispatch(deleteComment({post,auth,comment,socket}))
     }
     const MenuItem=()=>{
         return (

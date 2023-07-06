@@ -3,10 +3,30 @@ const express=require('express')
 const mongoose=require('mongoose')
 const cors =require("cors")
 const cookieParser=require('cookie-parser') 
+const SocketServer = require('./socketServer')
+
+
 const app=express();
 app.use(express.json())
 app.use(cors())
 app.use(cookieParser())
+
+
+
+
+const http = require('http').createServer(app)
+const io = require('socket.io')(http)
+
+io.on('connection', socket => {
+    SocketServer(socket)
+})
+
+
+app.use('/api',require('./routes/authRouter'))
+app.use('/api',require('./routes/userRouter'))
+app.use('/api',require('./routes/postRouter'))
+app.use('/api',require('./routes/commentRouter'))
+app.use('/api', require('./routes/notifyRouter'))
 
 
 const URL=process.env.MONGODB_URL;
@@ -17,13 +37,8 @@ mongoose.connect(URL,{
     console.log("Connected to db");
 })
 
-app.use('/api',require('./routes/authRouter'))
-app.use('/api',require('./routes/userRouter'))
-app.use('/api',require('./routes/postRouter'))
-app.use('/api',require('./routes/commentRouter'))
-
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT,()=>{
+http.listen(PORT,()=>{
     console.log(`Listening on port ${PORT}`);
 })
