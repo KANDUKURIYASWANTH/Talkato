@@ -28,7 +28,10 @@ const postCtrl={
             await newPost.save()
             res.json({
                 msg:'Create post',
-                newPost
+                newPost:{
+                    ...newPost._doc,
+                    user:req.user
+                }
             })
         } catch (error) {
             return res.status(500).json({msg:error.message})
@@ -40,7 +43,7 @@ const postCtrl={
                 user:[...req.user.following,req.user._id]
             }),req.query).paginating()
             const posts = await features.query.sort('-createdAt')
-            .populate("user likes","avatar username fullname")
+            .populate("user likes","avatar username fullname followers")
             .populate({
                 path:"comments",
                 populate:{
@@ -122,7 +125,7 @@ const postCtrl={
     getPost:async(req,res)=>{
         try {
             const post = await Posts.findById(req.params.id)
-            .populate("user likes","avatar username fullname")
+            .populate("user likes","avatar username fullname followers")
             .populate({
                 path:"comments",
                 populate:{
@@ -163,7 +166,13 @@ const postCtrl={
         try {
             const post=await Posts.findOneAndDelete({_id:req.params.id,user:req.user._id})
             await Comments.deleteMany({_id:{$in:post.comments}})
-            res.json({msg:"Deleted post!"})
+            res.json({
+                msg: 'Deleted Post!',
+                newPost: {
+                    ...post,
+                    user: req.user
+                }
+            })
         } catch (err) {
             return res.status(500).json({msg:err.message})
         }
