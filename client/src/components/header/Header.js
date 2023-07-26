@@ -1,6 +1,7 @@
 import React from 'react'
 import Menu from './Menu'
 import Search from './Search'
+import { Link } from 'react-router-dom'
 
 const Header = () => {
 
@@ -9,12 +10,12 @@ const Header = () => {
             <nav className="navbar navbar-expand-lg navbar-light 
             bg-light justify-content-between align-middle">
 
-                <a href="/" className="logo">
+                <Link to="/" className="logo">
                     <h1 className="navbar-brand text-uppercase p-0 m-0"
                     onClick={() => window.scrollTo({top: 0})}>
                         Talkato
                     </h1>
-                </a>
+                </Link>
 
                 <Search />
 

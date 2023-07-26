@@ -9,6 +9,7 @@ import NotifyModal from "../NotifyModal";
 const Menu = () => {
     const navLinks = [
         { label: "Home", icon: "home", path: "/" },
+        { label: "Audiotweet" , icon:"mic",path:"/audiotweet"},
         { label: "Message", icon: "near_me", path: "/message" },
         { label: "Discover", icon: "explore", path: "/discover" },
       ];
@@ -23,9 +24,9 @@ const Menu = () => {
       <ul className="navbar-nav flex-row">
         {navLinks.map((link, index) => (
           <li className={`nav-item px-2 ${isActive(link.path)}`} key={index}>
-            <a className="nav-link" href={link.path}>
+            <Link className="nav-link" to={link.path}>
               <span className="material-icons">{link.icon}</span>
-            </a>
+            </Link>
           </li>
         ))}
          <li className="nav-item dropdown" style={{opacity: 1}} >
@@ -55,9 +56,9 @@ const Menu = () => {
             <Avatar src={auth.user.avatar} size={"small-avatar"} />
           </span>
           <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a className="dropdown-item" href={`/profile/${auth.user._id}`}>
+            <Link className="dropdown-item" to={`/profile/${auth.user._id}`}>
               Profile
-            </a>
+            </Link>
             <label
               htmlFor="theme"
               className="dropdown-item"

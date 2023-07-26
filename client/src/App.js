@@ -7,9 +7,11 @@ import Login from "./pages/login";
 import Register from "./pages/register"
 
 
+
 import Alert from "./components/alert/Alert";
 import Header from "./components/header/Header";
 import StatusModal from "./components/StatusModal";
+import TweetModal from "./components/TweetModal";
 
 
 import { useSelector, useDispatch } from "react-redux";
@@ -23,7 +25,7 @@ import SocketClient from './SocketClient'
 import { getNotifies } from "./redux/actions/notifyAction"
 
 function App() {
-  const { auth,status,modal } = useSelector((state) => state);
+  const { auth,status,tweet,modal } = useSelector((state) => state);
   const dispatch = useDispatch();
 
 
@@ -55,8 +57,6 @@ function App() {
       });
     }
   },[])
-
-
   
   return (
     <Router>
@@ -66,6 +66,7 @@ function App() {
         <div className="main">
           {auth.token && <Header />}
           {status && <StatusModal/>}
+          {tweet && <TweetModal/>}
           {auth.token && <SocketClient/>}
           <Route exact path="/" component={auth.token ? Home : Login} />
           <Route exact path="/register" component={auth.token ? Home : Register} />

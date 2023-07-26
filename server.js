@@ -4,7 +4,7 @@ const mongoose=require('mongoose')
 const cors =require("cors")
 const cookieParser=require('cookie-parser') 
 const SocketServer = require('./socketServer')
-
+const {PeerServer}=require('peer')
 
 const app=express();
 app.use(express.json())
@@ -21,12 +21,14 @@ io.on('connection', socket => {
     SocketServer(socket)
 })
 
+PeerServer({ port:3001,path:'/'})
 
 app.use('/api',require('./routes/authRouter'))
 app.use('/api',require('./routes/userRouter'))
 app.use('/api',require('./routes/postRouter'))
 app.use('/api',require('./routes/commentRouter'))
 app.use('/api', require('./routes/notifyRouter'))
+app.use('/api',require('./routes/messageRouter'))
 
 
 const URL=process.env.MONGODB_URL;

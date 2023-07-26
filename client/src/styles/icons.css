@@ -1,0 +1,12 @@
+.reactions{
+    display: grid;
+    grid-template-columns: repeat(4, 50px);
+    text-align: center;
+    cursor: pointer;
+}
+.reactions span{
+    margin: 3px 0;
+}
+.dropdown{
+    z-index: 10;
+}

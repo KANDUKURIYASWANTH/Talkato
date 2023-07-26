@@ -3,8 +3,11 @@ export const GLOBALTYPES={
     ALERT:"ALERT",
     THEME:"THEME",
     STATUS:'STATUS',
+    TWEET:'TWEET',
     MODAL:'MODAL',
-    SOCKET:'SOCKET'
+    SOCKET:'SOCKET',
+    ONLINE:'ONLINE',
+    OFFLINE:'OFFLINE'
 }
 export const EditData = (data, id, post) => {
     const newData = data.map(item => 

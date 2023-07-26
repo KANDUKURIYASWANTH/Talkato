@@ -63,11 +63,20 @@ img {
 /* -------- Status_model ---------- */
 @import url("./status_model.css");
 
+/* -------- Tweet_model ---------- */
+@import url("./tweet_modal.css");
+
 /* -------- comments ---------- */
 @import url("./comments.css");
 
 /* -------- post_thumb ---------- */
 @import url("./post_thumb.css");
+
+/* -------- message ---------- */
+@import url("./message.css");
+
+/* -------- icons ---------- */
+@import url("./icons.css");
 
 /* --------- Responsive ------ */
 @media (max-width: 766px){
@@ -90,6 +99,9 @@ img {
   }
   .header .logo h1{
       font-size: 1.3rem;
+  }
+  .message{
+    height: calc(100vh-150px);
   }
 }
 

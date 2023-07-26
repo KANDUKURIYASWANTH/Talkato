@@ -31,11 +31,11 @@ const CardHeader = ({post}) => {
             <div className='card_name'>
                 <h6 className='m-0'>
                     <a href={`/profile/${post.user._id}`} className="text-dark">
-                        {post.user.username}
+                        { post.user.username}
                     </a>
                 </h6>
                 <small className='text-muted'>
-                    {moment(post.createdAt).fromNow()}
+                    { moment(post.createdAt).fromNow()}
                 </small>
             </div>
         </div>
