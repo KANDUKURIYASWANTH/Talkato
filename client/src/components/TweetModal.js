@@ -1,6 +1,7 @@
 import React, { useState,useRef,useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { GLOBALTYPES } from "../redux/actions/globalTypes";
+import { createTweet } from "../redux/actions/audiotweetAction";
 import Icons from "./Icons";
 const TweetModal = () => {
     const { auth,theme,tweet } = useSelector((state) => state);
@@ -8,15 +9,14 @@ const TweetModal = () => {
     const dispatch = useDispatch();
     const [content, setContent] = useState("")
     const [audios,setAudios]=useState([])
+    const [blobs,setBlobs]=useState([])
     const [stream, setStream] = useState(null);
-    const mimeType = "audio/*";
+    const mimeType = "audio/mpeg";
     const mediaRecorder = useRef(null);
     const [recordingStatus, setRecordingStatus] = useState(false);
     const [audioChunks, setAudioChunks] = useState([]);
     //const refCanvas = useRef()
-    const currentAudioRef = useRef(null);
-
-    
+    //const currentAudioRef = useRef(null);
   
       const getMicrophonePermission = async () => {
           if ("MediaRecorder" in window) {
@@ -36,28 +36,31 @@ const TweetModal = () => {
           }
       };
 
-    const handleAudioPlay = (event) => {
-        const audio = event.target;
+    // const handleAudioPlay = (event) => {
+    //     const audio = event.target;
     
-        if (currentAudioRef.current && currentAudioRef.current !== audio) {
-          currentAudioRef.current.pause();
-        }
+    //     if (currentAudioRef.current && currentAudioRef.current !== audio) {
+    //       currentAudioRef.current.pause();
+    //     }
     
-        currentAudioRef.current = audio;
-      };
+    //     currentAudioRef.current = audio;
+    //   };
 
     const handleAddAudios=e=>{
-        const files = e.target.files;
+        const files = [...e.target.files];
         const audioSrcs = [];
-    
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          const blob = new Blob([file], { type: file.type });
+        let err="";
+        files.forEach(file=>{
+          if(!file) return err="File does not exist"
+          if(file.size>1024*1024*10 ){
+            return err="The largest size is 10mb"
+          }
+          const blob = new Blob([file], { type: mimeType });
           const url = URL.createObjectURL(blob);
-    
-          audioSrcs.push(url);
-        }
-        
+          blobs.push(url)
+          return audioSrcs.push(file)
+        })
+        if(err) dispatch({type:GLOBALTYPES.ALERT,payload:{error:err}});
         setAudios([...audios, ...audioSrcs]);
       }
 
@@ -92,12 +95,33 @@ const TweetModal = () => {
            const audioBlob = new Blob(audioChunks, { type: mimeType });
           //creates a playable URL from the blob file.
            const audioUrl = URL.createObjectURL(audioBlob);
-           setAudios([...audios,audioUrl]);
+           var d = new Date();
+           const file = new File([audioBlob],d.valueOf(),{ type:"audio/wav" })
+           setBlobs([...blobs,audioUrl]);
+           setAudios([...audios,file]);
            setAudioChunks([]);
            setPermission(false);
            stream.getTracks()[0].stop()
         };
       };
+      const handleBreak=()=>{
+        dispatch({type:GLOBALTYPES.TWEET,payload:false});
+        setAudios([]);
+        if(stream){
+          stream.getTracks()[0].stop()
+        }
+      }
+      const handleSubmit=(e)=>{
+        e.preventDefault()
+        if(audios.length===0){
+          dispatch({
+            type:GLOBALTYPES.ALERT,
+            payload:{error:"Please add audio tweets"}
+          })
+        }
+        dispatch(createTweet({content,audios,auth}));
+
+      }
 
       useEffect(()=>{
         if(tweet.onEdit){
@@ -107,14 +131,11 @@ const TweetModal = () => {
       },[tweet])
     return (
       <div className="tweet_modal">
-        {/* <form onSubmit={handleSubmit}>  */}
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="tweet_header">
             <h5 className="m-0">Create Tweet!</h5>
             <span
-              onClick={() =>
-                dispatch({ type: GLOBALTYPES.TWEET, payload: false })
-              }
+              onClick={handleBreak}
             >
               &times;
             </span>
@@ -136,9 +157,9 @@ const TweetModal = () => {
               <Icons setContent={setContent} content={content} theme={theme} />
             </div>
             <div className="show_audios">
-              {audios.map((audio, index) => (
+              {blobs.map((audio, index) => (
                 <div key={index} id="file_audio">
-                  <>{<audio controls src={audio} onPlay={handleAudioPlay} />}</>
+                  <>{<audio controls src={audio} />}</>
                   <span onClick={() => deleteAudios(index)}>&times;</span>
                 </div>
               ))}
