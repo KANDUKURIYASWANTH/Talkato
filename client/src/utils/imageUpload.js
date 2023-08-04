@@ -1,3 +1,4 @@
+import {UPLOAD_PRESENT,CLOUD_NAME,fetchAPI_LINK} from './config'
 export const checkImage = (file) => {
     let err = ""
     if(!file) return err = "File does not exist."
@@ -22,10 +23,10 @@ export const imageUpload = async (images) => {
             formData.append("file", item)
         }
         
-        formData.append("upload_preset", "iwciwj3l")
-        formData.append("cloud_name", "dq3ucyivu")
+        formData.append("upload_preset", UPLOAD_PRESENT)
+        formData.append("cloud_name", CLOUD_NAME)
 
-        const res = await fetch("https://api.cloudinary.com/v1_1/dq3ucyivu/upload", {
+        const res = await fetch(fetchAPI_LINK, {
             method: "POST",
             body: formData
         })

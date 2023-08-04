@@ -10,6 +10,7 @@ export const PROFILE_TYPES={
     UNFOLLOW:'UNFOLLOW',
     GET_ID:'GET_PROFILE_ID',
     GET_POSTS:'GET_PROFILE_POSTS',
+    GET_TWEETS:'GET_PROFILE_TWEETS',
     UPDATE_POST:'UPDATE_PROFILE_POST'
 }
 
@@ -19,8 +20,10 @@ export const getProfileUsers=({id,auth})=>async (dispatch)=> {
         dispatch({type:PROFILE_TYPES.LOADING,payload:true})
         const res = getDataAPI(`/user/${id}`,auth.token)
         const res1 = getDataAPI(`/user_posts/${id}`,auth.token)
+        const res2=getDataAPI(`user_tweets/${id}`,auth.token)
         const users= await res;
         const posts = await res1;
+        const tweets=await res2;
 
         dispatch({
             type:PROFILE_TYPES.GET_USER,
@@ -29,6 +32,10 @@ export const getProfileUsers=({id,auth})=>async (dispatch)=> {
         dispatch({
             type:PROFILE_TYPES.GET_POSTS,
             payload: {...posts.data,_id:id,page:2}
+        })
+        dispatch({
+            type:PROFILE_TYPES.GET_TWEETS,
+            payload:{...tweets.data,_id:id,page:2}
         })
 
         dispatch({type:PROFILE_TYPES.LOADING,payload:false})

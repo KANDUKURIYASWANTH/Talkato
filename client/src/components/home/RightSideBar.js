@@ -39,7 +39,7 @@ const RightSideBar = () => {
         )}
 
         <div style={{ opacity: 0.5 }} className="my-2">
-          <small className='text-danger'>This site is hosted and maintained by &copy; 2023 TALKATO</small>
+          <small className='text-danger'>This site is developed by &copy; <a href='https://www.linkedin.com/in/kandukuri-yaswanth/' target='_blank' rel="noreferrer">Yaswanth</a></small>
           <br/>
         </div>
       </div>

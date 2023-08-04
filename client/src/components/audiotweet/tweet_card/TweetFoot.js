@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react'
 import Send from '../../../images/send.svg'
 import LikeButton from '../../LikeButton'
 import { useSelector, useDispatch } from 'react-redux'
-import { likePost, unLikePost, savePost, unSavePost } from '../../../redux/actions/postAction'
+import { likeTweet, unLikeTweet, saveTweet, unSaveTweet } from '../../../redux/actions/audiotweetAction'
 import ShareModal from '../../ShareModal'
 import { BASE_URL } from '../../../utils/config'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 
-const CardFooter = ({post}) => {
+const TweetFooter = ({tweet}) => {
     const [isLike, setIsLike] = useState(false)
     const [loadLike, setLoadLike] = useState(false)
 
@@ -22,18 +22,17 @@ const CardFooter = ({post}) => {
 
     // Likes
     useEffect(() => {
-        if(post.likes.find(like => like._id === auth.user._id)){
+        if(tweet.likes.find(like => like._id === auth.user._id)){
             setIsLike(true)
         }else{
             setIsLike(false)
         }
-    }, [post.likes, auth.user._id])
+    }, [tweet.likes, auth.user._id])
 
     const handleLike = async () => {
         if(loadLike) return;
-        
         setLoadLike(true)
-        await dispatch(likePost({post, auth, socket}))
+        await dispatch(likeTweet({tweet, auth, socket}))
         setLoadLike(false)
     }
 
@@ -41,33 +40,33 @@ const CardFooter = ({post}) => {
         if(loadLike) return;
 
         setLoadLike(true)
-        await dispatch(unLikePost({post, auth, socket}))
+        await dispatch(unLikeTweet({tweet, auth, socket}))
         setLoadLike(false)
     }
 
 
     // Saved
     useEffect(() => {
-        if(auth.user.saved.find(id => id === post._id)){
+        if(auth.user.savedTweet.find(id => id === tweet._id)){
             setSaved(true)
         }else{
             setSaved(false)
         }
-    },[auth.user.saved, post._id])
+    },[auth.user.savedTweet, tweet._id])
 
     const handleSavePost = async () => {
         if(saveLoad) return;
-        
+        setSaved(true)
         setSaveLoad(true)
-        await dispatch(savePost({post, auth}))
+        await dispatch(saveTweet({tweet, auth}))
         setSaveLoad(false)
     }
 
     const handleUnSavePost = async () => {
         if(saveLoad) return;
-
+        setSaved(false)
         setSaveLoad(true)
-        await dispatch(unSavePost({post, auth}))
+        await dispatch(unSaveTweet({tweet, auth}))
         setSaveLoad(false)
     }
 
@@ -81,7 +80,7 @@ const CardFooter = ({post}) => {
                     handleUnLike={handleUnLike}
                     />
 
-                    <Link to={`/post/${post._id}`} className="text-dark">
+                    <Link to={`/audiotweet/${tweet._id}`} className="text-dark">
                         <i className="far fa-comment" />
                     </Link>
 
@@ -101,19 +100,19 @@ const CardFooter = ({post}) => {
 
             <div className="d-flex justify-content-between">
                 <h6 style={{padding: '0 25px', cursor: 'pointer'}}>
-                    {post.likes.length} likes
+                    {tweet.likes.length} likes
                 </h6>
                 
                 <h6 style={{padding: '0 25px', cursor: 'pointer'}}>
-                    {post.comments.length} comments
+                    {tweet.comments.length} comments
                 </h6>
             </div>
 
             {
-                isShare && <ShareModal url={`${BASE_URL}/post/${post._id}`} theme={theme} />
+                isShare && <ShareModal url={`${BASE_URL}/audiotweet/${tweet._id}`} theme={theme} />
             }
         </div>
     )
 }
 
-export default CardFooter
+export default TweetFooter

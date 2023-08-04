@@ -1,9 +1,16 @@
 import React from 'react'
-
-const tweets = () => {
+import { useSelector } from 'react-redux'
+import TweetCard from '../TweetCard'
+const Tweets = () => {
+  const {audioTweets,theme} = useSelector(state=>state)
   return (
-    <div>tweets</div>
+    <div className='tweets'>
+    {  audioTweets.tweets.map(tweet=>(
+        <TweetCard key={tweet._id} tweet={tweet} theme={theme}/>
+      ))}
+      
+    </div>
   )
 }
 
-export default tweets
+export default Tweets

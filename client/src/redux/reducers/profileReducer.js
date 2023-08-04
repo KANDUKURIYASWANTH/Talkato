@@ -4,7 +4,8 @@ const initialState={
     loading:false,
     ids:[],
     users:[],
-    posts:[]
+    posts:[],
+    tweets:[]
 }
 
 const profileReducer = (state = initialState, action) => {
@@ -40,6 +41,12 @@ const profileReducer = (state = initialState, action) => {
                 ...state,
                 posts:[...state.posts,action.payload]
             };
+        case PROFILE_TYPES.GET_TWEETS:
+            return {
+                ...state,
+                tweets:[...state.tweets,action.payload]
+            };
+            
         case PROFILE_TYPES.UPDATE_POST:
             return {
                 ...state,

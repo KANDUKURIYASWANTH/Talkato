@@ -103,6 +103,35 @@ const authCtrl={
         } catch (error) {
             return res.status(500).json({msg:error.message})
         }
+    },
+    resetPassword:async(req,res)=>{
+        try {
+            const { email, password } = req.body;
+            const user = await Users.findOne({ email });
+            if (!user) return res.status(400).json({ msg: 'User not found' });
+            const hashedPassword = await bcrypt.hash(password, 10);
+    
+            await Users.findByIdAndUpdate(user._id, { password: hashedPassword });
+            const access_token = createAccessToken({ id: user._id });
+            const refresh_token = createRefreshToken({id:user._id})
+            res.cookie('refresh_token',refresh_token,{
+                httpOnly:true,
+                path: '/api/refresh_token',
+                maxAge: 30*24*60*60*1000
+            })
+        
+            res.json({
+              msg: 'Password reset successful',
+              access_token,
+              user: {
+                ...user._doc,
+                password: '',
+              },
+              redirect: '/login',
+            });
+        }catch (error) {
+        return res.status(500).json({msg:error.message})
+        }
     }
 }
 const createAccessToken=(payload)=>{

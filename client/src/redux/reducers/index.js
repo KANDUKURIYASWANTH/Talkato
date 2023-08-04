@@ -8,6 +8,7 @@ import audioTweets from './audiotweetReducer'
 import homePosts from './postReducer'
 import modal from './modalReducer'
 import detailPost from './detailPostReducer'
+import detailTweet from './detailTweetReducer'
 import discover from "./discoverReducer"
 import suggestions from './suggestionsReducer'
 import socket from './socketReducer'
@@ -27,6 +28,7 @@ export default combineReducers({
     audioTweets,
     homePosts,
     detailPost,
+    detailTweet,
     discover,
     suggestions,
     socket,

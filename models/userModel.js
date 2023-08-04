@@ -38,7 +38,8 @@ const userSchema = new mongoose.Schema({
     website: {type: String, default: ''},
     followers: [{type: mongoose.Types.ObjectId, ref: 'user'}],
     following: [{type: mongoose.Types.ObjectId, ref: 'user'}],
-    saved: [{type: mongoose.Types.ObjectId, ref: 'user'}]
+    saved: [{type: mongoose.Types.ObjectId, ref: 'user'}],
+    savedTweet:[{type:mongoose.Types.ObjectId, ref:'tweet'}]
 },{
     timestamps:true
 })

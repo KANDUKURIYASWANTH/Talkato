@@ -30,12 +30,12 @@ const CardHeader = ({post}) => {
             <Avatar src={post.user.avatar} size="big-avatar"/>
             <div className='card_name'>
                 <h6 className='m-0'>
-                    <a href={`/profile/${post.user._id}`} className="text-dark">
-                        { post.user.username}
+                    <a href={`/profile/${post.user._id}`} className="text-dark mx-2">
+                        {post.user.username}
                     </a>
                 </h6>
-                <small className='text-muted'>
-                    { moment(post.createdAt).fromNow()}
+                <small className='text-muted mx-2'>
+                    {moment(post.createdAt).fromNow()}
                 </small>
             </div>
         </div>

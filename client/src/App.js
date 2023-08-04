@@ -23,6 +23,8 @@ import io from 'socket.io-client'
 import { GLOBALTYPES } from "./redux/actions/globalTypes";
 import SocketClient from './SocketClient'
 import { getNotifies } from "./redux/actions/notifyAction"
+import { getTweets } from "./redux/actions/audiotweetAction";
+import Forgotpassword from "./pages/forgotpassword";
 
 function App() {
   const { auth,status,tweet,modal } = useSelector((state) => state);
@@ -42,6 +44,7 @@ function App() {
       dispatch(getPosts(auth.token))
       dispatch(getSuggestions(auth.token))
       dispatch(getNotifies(auth.token))
+      dispatch(getTweets(auth.token))
     }
   },[dispatch,auth.token])
 
@@ -70,6 +73,7 @@ function App() {
           {auth.token && <SocketClient/>}
           <Route exact path="/" component={auth.token ? Home : Login} />
           <Route exact path="/register" component={auth.token ? Home : Register} />
+          <Route exact path="/forgotpassword" component={auth.token ? Home : Forgotpassword} />
           <Route exact path="/:page" component={PageRender} />
           <Route exact path="/:page/:id" component={PageRender} />
         </div>

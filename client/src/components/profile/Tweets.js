@@ -1,33 +1,44 @@
 import React,{useState,useEffect} from 'react'
-import PostThumb from '../PostThumb'
+import TweetHeader from '../audiotweet/tweet_card/TweetHeader'
+import TweetBody from '../audiotweet/tweet_card/TweetBody'
+import TweetFooter from '../audiotweet/tweet_card/TweetFoot'
 import LoadIcon from '../../images/loading.gif'
 import LoadMoreBtn from '../LoadMoreBtn'
 import {getDataAPI} from '../../utils/fetchData'
 import {PROFILE_TYPES} from '../../redux/actions/profileAction'
-const Posts = ({auth,dispatch,profile,id}) => {
-  const [posts,setPosts] = useState([])
-  const [result,setResult]=useState(9)
+const Tweets = ({auth,dispatch,profile,id,theme}) => {
+  const [tweets,setTweets] = useState([])
+  const [result,setResult]=useState(3)
   const [page,setPage] = useState(0)
   const [load,setLoad] = useState(false)
   const handleLoadMore = async ()=>{
     setLoad(true)
-    const res=await getDataAPI(`user_posts/${id}?limit=${page*9}`,auth.token)
+    const res=await getDataAPI(`user_tweets/${id}?limit=${page*9}`,auth.token)
     const newData={...res.data,page:page+1,_id:id}
     dispatch({type:PROFILE_TYPES.UPDATE_POST,payload:newData})
     setLoad(false)
   }
   useEffect(()=>{
-    profile.posts.forEach(data=>{
+    profile.tweets.forEach(data=>{
       if(data._id===id){
-        setPosts(data.posts)
+        setTweets(data.tweets)
         setResult(data.result)
         setPage(data.page)
       }
     })
   },[profile,id])
   return (
-    <div>
-      <PostThumb posts={posts} result={result}/>
+    <div className='tweets'>
+      {
+        tweets.length===0 && <h2 className='text-center text-danger'>No Tweets</h2>
+      }
+      {tweets.map(tweet=>(
+        <div className='card my-3' key={tweet._id}>
+          <TweetHeader tweet={tweet}/>
+          <TweetBody tweet={tweet} theme={theme}/>
+          <TweetFooter tweet={tweet}/>
+        </div>
+      ))}
       {
         load && <img src={LoadIcon} alt='loading' className='d-block mx-auto'/>
       }
@@ -38,4 +49,4 @@ const Posts = ({auth,dispatch,profile,id}) => {
   )
 }
 
-export default Posts
+export default Tweets

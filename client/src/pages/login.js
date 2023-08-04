@@ -75,10 +75,15 @@ const Login = () => {
           Login
         </button>
 
-        <p className="my-2">
+        <p className="my-1">
           Don't have an account?{" "}
           <a href="/register" style={{ color: "crimson" }}>
             Register Now
+          </a>
+        </p>
+        <p className="my-1">
+          <a href="/forgotpassword" style={{ color: "crimson" }}>
+            Forgot password?
           </a>
         </p>
       </form>

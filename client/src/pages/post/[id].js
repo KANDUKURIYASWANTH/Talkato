@@ -7,7 +7,7 @@ import PostCard from '../../components/PostCard'
 const Post = () => {
     const {id} = useParams()
     const [post,setPost] = useState([])
-    const {auth,detailPost} = useSelector(state=>state)
+    const {auth,detailPost,theme} = useSelector(state=>state)
     const dispatch = useDispatch()
     useEffect(()=>{
         dispatch(getPost({detailPost,id,auth}))
@@ -21,7 +21,7 @@ const Post = () => {
         {
             post.length===0 
             ?<img src={LoadIcom} alt="loading" className='d-block mx-auto my-4'/>
-            :<PostCard key={post[0]._id} post={post[0]}/>
+            :<PostCard key={post[0]._id} post={post[0]} theme={theme}/>
         }
         
     </div>

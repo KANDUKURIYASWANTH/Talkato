@@ -52,8 +52,8 @@ const TweetModal = () => {
         let err="";
         files.forEach(file=>{
           if(!file) return err="File does not exist"
-          if(file.size>1024*1024*10 ){
-            return err="The largest size is 10mb"
+          if(file.size>1024*1024*15 ){
+            return err="Size limit exceeded"
           }
           const blob = new Blob([file], { type: mimeType });
           const url = URL.createObjectURL(blob);
@@ -120,6 +120,7 @@ const TweetModal = () => {
           })
         }
         dispatch(createTweet({content,audios,auth}));
+        dispatch({type:GLOBALTYPES.TWEET,payload:false})
 
       }
 
